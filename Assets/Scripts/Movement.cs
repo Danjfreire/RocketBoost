@@ -8,7 +8,6 @@ public class Movement : MonoBehaviour
     [SerializeField] private float thrustStrength = 100f;
     [SerializeField] private float rotationStrength = 100f;
 
-
     private Rigidbody rb;
 
     private void OnEnable()
@@ -46,7 +45,9 @@ public class Movement : MonoBehaviour
             float rotationMultiplier = rotationStrength * Time.fixedDeltaTime;
             Vector3 rotationDirection = rotationInput > 0 ? Vector3.back : Vector3.forward;
 
+            rb.freezeRotation = true;
             transform.Rotate(rotationDirection * rotationMultiplier);
+            rb.freezeRotation = false;
         }
     }
 }
