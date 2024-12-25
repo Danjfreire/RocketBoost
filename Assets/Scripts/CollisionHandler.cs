@@ -9,6 +9,7 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] private AudioClip successAudioClip;
 
     private AudioSource audioSource;
+    private bool canColllide = true;
 
     private void Awake()
     {
@@ -17,6 +18,8 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if (!canColllide) return;
+
         switch (other.gameObject.tag)
         {
             case "Friendly":
@@ -26,11 +29,13 @@ public class CollisionHandler : MonoBehaviour
                 }
             case "Finish":
                 {
+                    canColllide = false;
                     StartSuccessSequence();
                     break;
                 }
             default:
                 {
+                    canColllide = false;
                     StartCrashSequence();
                     break;
                 }
@@ -40,6 +45,7 @@ public class CollisionHandler : MonoBehaviour
     private void StartCrashSequence()
     {
         // TODO: add particles
+        audioSource.Stop();
         audioSource.PlayOneShot(explosionAudioClip, 0.5f);
         // Disable player movement
         GetComponent<Movement>().enabled = false;
@@ -49,6 +55,7 @@ public class CollisionHandler : MonoBehaviour
     private void StartSuccessSequence()
     {
         // TODO: add particles
+        audioSource.Stop();
         audioSource.PlayOneShot(successAudioClip, 0.5f);
         // Disable player movement
         GetComponent<Movement>().enabled = false;
