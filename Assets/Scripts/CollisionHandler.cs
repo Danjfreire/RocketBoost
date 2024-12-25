@@ -7,9 +7,11 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] private float levelLoadDelay = 2f;
     [SerializeField] private AudioClip explosionAudioClip;
     [SerializeField] private AudioClip successAudioClip;
+    [SerializeField] private ParticleSystem explosionParticles;
+    [SerializeField] private ParticleSystem successParticles;
 
     private AudioSource audioSource;
-    private bool canColllide = true;
+    private bool canCollide = true;
 
     private void Awake()
     {
@@ -18,7 +20,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (!canColllide) return;
+        if (!canCollide) return;
 
         switch (other.gameObject.tag)
         {
@@ -29,13 +31,13 @@ public class CollisionHandler : MonoBehaviour
                 }
             case "Finish":
                 {
-                    canColllide = false;
+                    canCollide = false;
                     StartSuccessSequence();
                     break;
                 }
             default:
                 {
-                    canColllide = false;
+                    canCollide = false;
                     StartCrashSequence();
                     break;
                 }
@@ -44,7 +46,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartCrashSequence()
     {
-        // TODO: add particles
+        explosionParticles.Play();
         audioSource.Stop();
         audioSource.PlayOneShot(explosionAudioClip, 0.5f);
         // Disable player movement
@@ -54,7 +56,7 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartSuccessSequence()
     {
-        // TODO: add particles
+        successParticles.Play();
         audioSource.Stop();
         audioSource.PlayOneShot(successAudioClip, 0.5f);
         // Disable player movement
