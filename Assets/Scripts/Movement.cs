@@ -7,7 +7,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private InputAction rotation;
     [SerializeField] private float thrustStrength = 100f;
     [SerializeField] private float rotationStrength = 100f;
-    [SerializeField] private AudioClip engineAudioClip;
+    [SerializeField] private AudioClip mainThrusterAudioClip;
+    [SerializeField] private ParticleSystem mainThrusterParticles;
+    [SerializeField] private ParticleSystem leftThrusterParticles;
+    [SerializeField] private ParticleSystem rightThrusterParticles;
 
     private AudioSource audioSource;
     private Rigidbody rb;
@@ -39,12 +42,18 @@ public class Movement : MonoBehaviour
 
             if (!audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(engineAudioClip);
+                audioSource.PlayOneShot(mainThrusterAudioClip);
+            }
+
+            if (!mainThrusterParticles.isPlaying)
+            {
+                mainThrusterParticles.Play();
             }
         }
         else
         {
             audioSource.Stop();
+            mainThrusterParticles.Stop();
         }
     }
 
@@ -55,11 +64,34 @@ public class Movement : MonoBehaviour
         if (rotationInput != 0)
         {
             float rotationMultiplier = rotationStrength * Time.fixedDeltaTime;
-            Vector3 rotationDirection = rotationInput > 0 ? Vector3.back : Vector3.forward;
+            Vector3 rotationDirection;
+            ParticleSystem thrusterParticles;
+
+            if (rotationInput > 0) // Rotating right 
+            {
+                rotationDirection = Vector3.back;
+                thrusterParticles = leftThrusterParticles;
+            }
+            else // rotating left 
+            {
+                rotationDirection = Vector3.forward;
+                thrusterParticles = rightThrusterParticles;
+            }
 
             rb.freezeRotation = true;
             transform.Rotate(rotationDirection * rotationMultiplier);
+
+            if (!thrusterParticles.isPlaying)
+            {
+                thrusterParticles.Play();
+            }
+
             rb.freezeRotation = false;
+        }
+        else
+        {
+            leftThrusterParticles.Stop();
+            rightThrusterParticles.Stop();
         }
     }
 }
