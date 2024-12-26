@@ -67,6 +67,7 @@ public class Movement : MonoBehaviour
             Vector3 rotationDirection;
             ParticleSystem thrusterParticles;
 
+            // Figure out the rotation direction and which particle system should be used
             if (rotationInput > 0) // Rotating right 
             {
                 rotationDirection = Vector3.back;
